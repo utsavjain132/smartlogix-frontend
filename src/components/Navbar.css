@@ -1,0 +1,83 @@
+.navbar {
+  background: #fff;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  font-size: 1.2rem;
+  position: relative;
+  top: 0;
+  z-index: 999;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* --- main flex container --- */
+.navbar-container {
+  display: flex;
+  justify-content: space-between; /* logo left, menu right */
+  align-items: center;
+  height: 80px;
+  width: 100%;
+  padding: 0 40px; /* space from edges */
+  margin: 0;
+  max-width: none; /* allows full stretch */
+}
+
+/* --- logo --- */
+.navbar-logo {
+  color: #333;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+}
+
+/* --- nav menu --- */
+.nav-menu {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  gap: 20px; /* spacing between Home & Login */
+  margin: 0;
+  padding: 0;
+}
+
+/* --- nav links --- */
+.nav-links {
+  color: #666;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s ease-out, border-bottom 0.2s ease-out;
+}
+
+.nav-links:hover {
+  color: #007BFF;
+  border-bottom: 3px solid #007BFF;
+}
+
+/* --- nav item --- */
+.nav-item {
+  display: flex;
+  align-items: center;
+  height: 80px;
+}
+
+/* Button style for nav links */
+.nav-button {
+  background-color: #00796b;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  
+  
+}
+
+.nav-button:hover {
+  background-color: #006054;
+}

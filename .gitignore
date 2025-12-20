@@ -1,0 +1,11 @@
+# Dependencies
+/node_modules
+
+# misc
+.DS_Store
+
+GEMINI.md 
+blueprint.md 
+
+*.log
+.directory

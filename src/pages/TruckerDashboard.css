@@ -1,0 +1,140 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+:root {
+    --primary-color: #00796B;
+    --bg-light: #E0F2F1;
+    --text-dark: #004D40;
+    --border-color: #B2DFDB;
+}
+
+.dashboard-container {
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-dark);
+    padding: 2rem;
+    background-color: var(--bg-light);
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.dashboard-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.dashboard-actions .btn-primary, .dashboard-actions .btn-secondary {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.dashboard-actions .btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.dashboard-actions .btn-primary:hover {
+    background-color: #004D40;
+}
+
+.dashboard-actions .btn-secondary {
+    background-color: transparent;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    margin-left: 1rem;
+}
+
+.dashboard-actions .btn-secondary:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+
+.dashboard-summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.summary-card {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.summary-card h2 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+}
+
+.summary-card p {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.dashboard-main {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.table-container h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead th {
+    text-align: left;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #6c757d;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+tbody td {
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.btn-sm {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+    border-radius: 6px;
+    border: 1px solid var(--primary-color);
+    background-color: transparent;
+    color: var(--primary-color);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-sm:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.dashboard-footer {
+    text-align: center;
+    margin-top: 2rem;
+    color: #6c757d;
+}
