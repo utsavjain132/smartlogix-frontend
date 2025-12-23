@@ -1,42 +1,49 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import './LoginPage.css';
-import { auth, db } from '../firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
-import EyeIcon from '../assets/icons/eye.svg';
-import EyeOffIcon from '../assets/icons/eye-off.svg';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import "./LoginPage.css";
+import EyeIcon from "../assets/icons/eye.svg";
+import EyeOffIcon from "../assets/icons/eye-off.svg";
+
+const API_BASE_URL = "http://localhost:5000/api";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [userType, setUserType] = useState('business');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [userType, setUserType] = useState("business");
+  const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError('');
-    // Login with Firebase
+    setError("");
+
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, password })
+      });
 
-      // Try reading stored userType from Firestore; fall back to chosen radio
-      const userDocRef = doc(db, 'users', user.uid);
-      const userSnap = await getDoc(userDocRef);
-      const storedType = userSnap.exists() ? userSnap.data().userType : null;
-      const finalType = storedType || userType;
+      const data = await response.json();
 
-      if (finalType === 'business') {
-        navigate('/business-dashboard');
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to log in");
+      }
+
+      localStorage.setItem("token", data.token);
+
+      // temporary routing logic
+      if (userType === "business") {
+        navigate("/business-dashboard");
       } else {
-        navigate('/trucker-dashboard');
+        navigate("/trucker-dashboard");
       }
     } catch (err) {
-      console.error('Login error', err);
-      setError(err.message || 'Failed to sign in');
+      setError(err.message);
     }
   };
 
@@ -47,66 +54,84 @@ const LoginPage = () => {
           <h1>Welcome Back</h1>
           <p>Please log in to your account</p>
         </div>
-        <form onSubmit={handleLogin} className="login-form">
+
+        <form className="login-form" onSubmit={handleLogin}>
           {error && <p className="error-message">{error}</p>}
+
           <div className="input-group">
             <label htmlFor="email">Email</label>
             <input
-              type="email"
               id="email"
+              type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
+
           <div className="input-group">
             <label htmlFor="password">Password</label>
             <div className="password-wrapper">
               <input
-                type={showPassword ? 'text' : 'password'}
                 id="password"
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
-              <button type = "button"
-              className='toggle-password'
-              onClick={() => setShowPassword((s) => !s)}>
-                  <img src={showPassword ? EyeOffIcon : EyeIcon} />
+              <button
+                type="button"
+                className="toggle-password"
+                onClick={() => setShowPassword((s) => !s)}
+              >
+                <img
+                  src={showPassword ? EyeOffIcon : EyeIcon}
+                  alt="Toggle password visibility"
+                />
               </button>
             </div>
           </div>
+
           <div className="input-group">
             <label>I am a:</label>
             <div className="radio-group">
-              
               <label>
                 <input
                   type="radio"
                   value="trucker"
-                  checked={userType === 'trucker'}
+                  checked={userType === "trucker"}
                   onChange={(e) => setUserType(e.target.value)}
                 />
                 Trucker
               </label>
+
               <label>
                 <input
                   type="radio"
                   value="business"
-                  checked={userType === 'business'}
+                  checked={userType === "business"}
                   onChange={(e) => setUserType(e.target.value)}
                 />
                 Business
               </label>
             </div>
           </div>
-          <button type="submit" className="btn-login">Log In</button>
+
+          <button type="submit" className="btn-login">
+            Log In
+          </button>
         </form>
+
         <div className="signup-link">
-          <p>Don't have an account? <Link to="/signup">Sign up</Link></p>
+          <p>
+            Don&apos;t have an account? <Link to="/signup">Sign up</Link>
+          </p>
         </div>
+
         <div className="home-link">
-          <p>Back to <Link to="/">Home</Link></p>
+          <p>
+            Back to <Link to="/">Home</Link>
+          </p>
         </div>
       </div>
     </div>
