@@ -1,8 +1,23 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+  const role = localStorage.getItem("role");
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    navigate("/");
+  };
+
+  const dashboardLink = 
+    role === "BUSINESS" ? "/business-dashboard" : 
+    role === "TRUCKER" ? "/trucker-dashboard" : 
+    "/admin-dashboard";
+
   return (
     <nav className="navbar">
       <div className="navbar-container">
@@ -11,8 +26,8 @@ const Navbar = () => {
         </Link>
         
         <ul className="nav-menu">
-        <li className="nav-item">
-            <Link to="/contact" className="nav-button">
+          <li className="nav-item">
+            <Link to="/contact-us" className="nav-button">
               Contact Us
             </Link>
           </li>
@@ -21,11 +36,27 @@ const Navbar = () => {
               Home
             </Link>
           </li>
-          <li className="nav-item">
-            <Link to="/login" className="nav-button">
-              Login
-            </Link>
-          </li>
+
+          {!token ? (
+            <li className="nav-item">
+              <Link to="/login" className="nav-button">
+                Login
+              </Link>
+            </li>
+          ) : (
+            <>
+              <li className="nav-item">
+                <Link to={dashboardLink} className="nav-button">
+                  Dashboard
+                </Link>
+              </li>
+              <li className="nav-item">
+                <button onClick={handleLogout} className="nav-button btn-logout">
+                  Logout
+                </button>
+              </li>
+            </>
+          )}
         </ul>
       </div>
     </nav>

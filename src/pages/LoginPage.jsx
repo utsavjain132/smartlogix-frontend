@@ -1,15 +1,14 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { apiRequest } from "../services/api";
 import "./LoginPage.css";
 import EyeIcon from "../assets/icons/eye.svg";
 import EyeOffIcon from "../assets/icons/eye-off.svg";
 
-const API_BASE_URL = "http://localhost:5000/api";
-
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [userType, setUserType] = useState("business");
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
@@ -20,30 +19,27 @@ const LoginPage = () => {
     setError("");
 
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+      const data = await apiRequest("/auth/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
         body: JSON.stringify({ email, password })
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to log in");
-      }
-
       localStorage.setItem("token", data.token);
+      localStorage.setItem("role", data.user.role);
 
-      // temporary routing logic
-      if (userType === "business") {
+      toast.success("Login successful!");
+
+      // Routing logic based on role
+      if (data.user.role === "BUSINESS") {
         navigate("/business-dashboard");
-      } else {
+      } else if (data.user.role === "TRUCKER") {
         navigate("/trucker-dashboard");
+      } else {
+        navigate("/");
       }
     } catch (err) {
       setError(err.message);
+      toast.error(err.message);
     }
   };
 
@@ -89,31 +85,6 @@ const LoginPage = () => {
                   alt="Toggle password visibility"
                 />
               </button>
-            </div>
-          </div>
-
-          <div className="input-group">
-            <label>I am a:</label>
-            <div className="radio-group">
-              <label>
-                <input
-                  type="radio"
-                  value="trucker"
-                  checked={userType === "trucker"}
-                  onChange={(e) => setUserType(e.target.value)}
-                />
-                Trucker
-              </label>
-
-              <label>
-                <input
-                  type="radio"
-                  value="business"
-                  checked={userType === "business"}
-                  onChange={(e) => setUserType(e.target.value)}
-                />
-                Business
-              </label>
             </div>
           </div>
 
