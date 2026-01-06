@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import "./LoginPage.css";
 import EyeIcon from "../assets/icons/eye.svg";
 import EyeOffIcon from "../assets/icons/eye-off.svg";
@@ -9,7 +10,6 @@ const API_BASE_URL = "http://localhost:5000/api";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [userType, setUserType] = useState("business");
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
@@ -35,15 +35,21 @@ const LoginPage = () => {
       }
 
       localStorage.setItem("token", data.token);
+      localStorage.setItem("role", data.user.role);
 
-      // temporary routing logic
-      if (userType === "business") {
+      toast.success("Login successful!");
+
+      // Routing logic based on role
+      if (data.user.role === "BUSINESS") {
         navigate("/business-dashboard");
-      } else {
+      } else if (data.user.role === "TRUCKER") {
         navigate("/trucker-dashboard");
+      } else {
+        navigate("/");
       }
     } catch (err) {
       setError(err.message);
+      toast.error(err.message);
     }
   };
 
@@ -91,32 +97,6 @@ const LoginPage = () => {
               </button>
             </div>
           </div>
-
-         {/* <div className="input-group">
-            <label>I am a:</label>
-            <div className="radio-group">
-              <label>
-                <input
-                  type="radio"
-                  value="TRUCKER"
-                  checked={userType === "TRUCKER"}
-                  onChange={(e) => setUserType(e.target.value)}
-                />
-                Trucker
-              </label>
-
-              <label>
-                <input
-                  type="radio"
-                  value="BUSINESS"
-                  checked={userType === "BUSINESS"}
-                  onChange={(e) => setUserType(e.target.value)}
-                />
-                Business
-              </label>
-            </div>
-          </div>
-          */}
 
           <button type="submit" className="btn-login">
             Log In

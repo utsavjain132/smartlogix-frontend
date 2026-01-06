@@ -1,7 +1,70 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import './TruckerDashboard.css';
 
+const API_BASE_URL = "http://localhost:5000/api";
+
 const TruckerDashboard = () => {
+  const [profile, setProfile] = useState(null);
+  const [availableLoads, setAvailableLoads] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const fetchData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const headers = { Authorization: `Bearer ${token}` };
+
+      // Fetch Profile
+      const profileRes = await fetch(`${API_BASE_URL}/trucker/profile/me`, { headers });
+      if (!profileRes.ok) throw new Error("Failed to fetch profile");
+      const profileData = await profileRes.json();
+      setProfile(profileData);
+
+      // Fetch Available Loads
+      const loadsRes = await fetch(`${API_BASE_URL}/loads/available`, { headers });
+      if (!loadsRes.ok) throw new Error("Failed to fetch available loads");
+      const loadsData = await loadsRes.json();
+      setAvailableLoads(loadsData);
+
+    } catch (err) {
+      setError(err.message);
+      toast.error(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const handleAcceptLoad = async (loadId) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${API_BASE_URL}/loads/${loadId}/accept`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || "Failed to accept load");
+      }
+
+      toast.success("Load accepted! Safe travels.");
+      fetchData(); // Refresh the list
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+
+  if (loading) return <div className="dashboard-container">Loading...</div>;
+  if (error) return <div className="dashboard-container">Error: {error}</div>;
+
   return (
     <div className="dashboard-container">
       <header className="dashboard-header">
@@ -13,21 +76,23 @@ const TruckerDashboard = () => {
       </header>
 
       <section className="dashboard-summary">
+        <div className="summary-card profile-card">
+          <h2>My Rig</h2>
+          <p><strong>Vehicle:</strong> {profile?.vehicleType}</p>
+          <p><strong>Capacity:</strong> {profile?.capacity} Tons</p>
+          <p><strong>Base:</strong> {profile?.currentLocation?.city}</p>
+        </div>
+        <div className="summary-card">
+          <h2>Available Loads</h2>
+          <p>{availableLoads.length}</p>
+        </div>
         <div className="summary-card">
           <h2>Active Job</h2>
-          <p>Mumbai to Delhi</p>
-        </div>
-        <div className="summary-card">
-          <h2>Next Payout</h2>
-          <p>₹ 25,000</p>
-        </div>
-        <div className="summary-card">
-          <h2>Completed Trips</h2>
-          <p>112</p>
+          <p>None</p>
         </div>
         <div className="summary-card">
           <h2>Total Earnings</h2>
-          <p>₹ 8,50,000</p>
+          <p>₹ 0</p>
         </div>
       </section>
 
@@ -37,40 +102,37 @@ const TruckerDashboard = () => {
           <table>
             <thead>
               <tr>
-                <th>Load ID</th>
+                <th>Cargo</th>
                 <th>Origin</th>
                 <th>Destination</th>
                 <th>Payout</th>
-                <th>Est. Time</th>
+                <th>Weight</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {/* Example Row */}
-              <tr>
-                <td>#67890</td>
-                <td>Pune</td>
-                <td>Nagpur</td>
-                <td>₹ 18,000</td>
-                <td>2 days</td>
-                <td><button className="btn-sm">Accept</button></td>
-              </tr>
-              <tr>
-                <td>#67891</td>
-                <td>Thane</td>
-                <td>Surat</td>
-                <td>₹ 12,000</td>
-                <td>1 day</td>
-                <td><button className="btn-sm">Accept</button></td>
-              </tr>
-              <tr>
-                <td>#67892</td>
-                <td>Mumbai</td>
-                <td>Goa</td>
-                <td>₹ 22,000</td>
-                <td>2 days</td>
-                <td><button className="btn-sm">Accept</button></td>
-              </tr>
+              {availableLoads.map(load => (
+                <tr key={load._id}>
+                  <td>{load.cargoType}</td>
+                  <td>{load.origin}</td>
+                  <td>{load.destination}</td>
+                  <td>₹ {load.price}</td>
+                  <td>{load.weight} Tons</td>
+                  <td>
+                    <button 
+                      className="btn-sm" 
+                      onClick={() => handleAcceptLoad(load._id)}
+                    >
+                      Accept
+                    </button>
+                  </td>
+                </tr>
+              ))}
+              {availableLoads.length === 0 && (
+                <tr>
+                  <td colSpan="6" style={{ textAlign: 'center' }}>No available loads found.</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
