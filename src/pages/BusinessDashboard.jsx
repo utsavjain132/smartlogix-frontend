@@ -57,15 +57,51 @@ const BusinessDashboard = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Simple coordinate mapping for demo purposes
+  const CITY_COORDS = {
+    "mumbai": [72.8777, 19.0760],
+    "delhi": [77.1025, 28.7041],
+    "bangalore": [77.5946, 12.9716],
+    "hyderabad": [78.4867, 17.3850],
+    "chennai": [80.2707, 13.0827],
+    "kolkata": [88.3639, 22.5726],
+    "pune": [73.8567, 18.5204],
+    "jaipur": [75.7873, 26.9124],
+    "ahmedabad": [72.5714, 23.0225],
+    "surat": [72.8311, 21.1702],
+    "lucknow": [80.9462, 26.8467],
+    "kanpur": [80.3318, 26.4499],
+    "nagpur": [79.0882, 21.1458],
+    "indore": [75.8577, 22.7196],
+    "thane": [72.9781, 19.2183],
+    "bhopal": [77.4126, 23.2599],
+    "visakhapatnam": [83.2185, 17.6868],
+    "patna": [85.1376, 25.5941],
+    "vadodara": [73.1812, 22.3072],
+    "ghaziabad": [77.4538, 28.6692]
+  };
+
   const handleSubmitLoad = async (e) => {
     e.preventDefault();
     try {
+      // Auto-attach coordinates if city matches our list
+      const originKey = formData.origin.toLowerCase().trim();
+      const destKey = formData.destination.toLowerCase().trim();
+      
+      const payload = {
+        ...formData,
+        originCoords: CITY_COORDS[originKey] || null, // Backend handles null/undefined
+        destinationCoords: CITY_COORDS[destKey] || null
+      };
+
       await apiRequest("/loads", {
         method: "POST",
-        body: JSON.stringify(formData)
+        body: JSON.stringify(payload)
       });
 
       toast.success("Load posted successfully!");
+      if (!payload.originCoords) toast.info("Note: Coordinates not found for origin. Tracking may be limited.");
+
       setShowForm(false);
       setFormData({ origin: "", destination: "", cargoType: "", weight: "", price: "", pickupDate: "" });
       fetchData(); // Refresh list
@@ -144,6 +180,10 @@ const BusinessDashboard = () => {
               <input name="weight" type="number" placeholder="Max Weight (Tons)" onChange={handleInputChange} required />
               <input name="price" type="number" placeholder="Price (₹)" onChange={handleInputChange} required />
               <input name="pickupDate" type="date" onChange={handleInputChange} required />
+              <select name="loadType" onChange={handleInputChange} required>
+                <option value="FTL">Full Truck Load (FTL)</option>
+                <option value="PTL">Partial Truck Load (PTL)</option>
+              </select>
             </div>
             <button type="submit" className="btn-submit">Submit Load</button>
           </form>

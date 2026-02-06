@@ -118,7 +118,7 @@ const TruckerDashboard = () => {
         <div className="summary-card profile-card">
           <h2>My Rig</h2>
           <p><strong>Vehicle:</strong> {profile?.vehicleType}</p>
-          <p><strong>Capacity:</strong> {profile?.capacity} Tons</p>
+          <p><strong>Capacity:</strong> {profile?.availableCapacity} / {profile?.capacity} Tons</p>
           <p><strong>Base:</strong> {profile?.currentLocation?.city}</p>
         </div>
         
@@ -132,6 +132,8 @@ const TruckerDashboard = () => {
               <MapComponent 
                 lat={profile?.currentLocation?.coordinates?.[1]} 
                 lng={profile?.currentLocation?.coordinates?.[0]} 
+                destLat={activeJob?.destinationLocation?.coordinates?.[1]}
+                destLng={activeJob?.destinationLocation?.coordinates?.[0]}
                 title="Your Current Location"
               />
             </div>
@@ -183,6 +185,7 @@ const TruckerDashboard = () => {
             <thead>
               <tr>
                 <th>Cargo</th>
+                <th>Type</th>
                 <th>Origin</th>
                 <th>Destination</th>
                 <th>Payout</th>
@@ -194,6 +197,7 @@ const TruckerDashboard = () => {
               {availableLoads.map(load => (
                 <tr key={load._id}>
                   <td>{load.cargoType}</td>
+                  <td><span className={`status-badge ${load.loadType === 'FTL' ? 'admin' : 'business'}`} style={{fontSize: '0.8rem'}}>{load.loadType}</span></td>
                   <td>{load.origin}</td>
                   <td>{load.destination}</td>
                   <td>₹ {load.price}</td>
