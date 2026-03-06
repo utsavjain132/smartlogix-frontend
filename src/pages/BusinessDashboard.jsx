@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { apiRequest } from '../services/api';
 import MapComponent from '../components/MapComponent';
-import './BusinessDashboard.css';
 
 const BusinessDashboard = () => {
   const [profile, setProfile] = useState(null);
@@ -154,51 +153,51 @@ const BusinessDashboard = () => {
       }
   };
 
-  if (loading) return <div className="dashboard-container">Loading...</div>;
-  if (error) return <div className="dashboard-container">Error: {error}</div>;
+  if (loading) return <div className="p-8 bg-teal-50 min-h-screen font-sans text-teal-900">Loading...</div>;
+  if (error) return <div className="p-8 bg-teal-50 min-h-screen font-sans text-teal-900">Error: {error}</div>;
 
   return (
-    <div className="dashboard-container">
-      <header className="dashboard-header">
-        <h1>{profile?.businessName || "Business Dashboard"}</h1>
-        <div className="dashboard-actions">
-          <button className="btn-primary" onClick={() => setShowForm(!showForm)}>
+    <div className="p-8 bg-teal-50 min-h-screen font-sans text-teal-900">
+      <header className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold">{profile?.businessName || "Business Dashboard"}</h1>
+        <div className="flex">
+          <button className="px-6 py-3 border-none rounded-lg text-base font-medium cursor-pointer transition-all duration-300 bg-teal-700 text-white hover:bg-teal-800" onClick={() => setShowForm(!showForm)}>
             {showForm ? "Cancel" : "Post a New Load"}
           </button>
         </div>
       </header>
 
       {showForm && (
-        <section className="post-load-section">
-          <h2>Post New Shipment</h2>
-          <form className="post-load-form" onSubmit={handleSubmitLoad}>
-            <div className="form-grid">
-              <input name="origin" placeholder="Origin (e.g. Mumbai)" onChange={handleInputChange} required />
-              <input name="destination" placeholder="Destination (e.g. Delhi)" onChange={handleInputChange} required />
-              <input name="cargoType" placeholder="Cargo Type (e.g. Electronics)" onChange={handleInputChange} required />
-              <input name="vehicleTypeRequired" placeholder="Required Truck Type (e.g. Semi-Truck)" onChange={handleInputChange} required />
-              <input name="weight" type="number" placeholder="Max Weight (Tons)" onChange={handleInputChange} required />
-              <input name="price" type="number" placeholder="Price (₹)" onChange={handleInputChange} required />
-              <input name="pickupDate" type="date" onChange={handleInputChange} required />
-              <select name="loadType" onChange={handleInputChange} required>
+        <section className="bg-white p-6 rounded-xl shadow-sm mb-8">
+          <h2 className="text-xl font-semibold mb-4">Post New Shipment</h2>
+          <form className="flex flex-col gap-4" onSubmit={handleSubmitLoad}>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <input className="p-2 border border-gray-300 rounded" name="origin" placeholder="Origin (e.g. Mumbai)" onChange={handleInputChange} required />
+              <input className="p-2 border border-gray-300 rounded" name="destination" placeholder="Destination (e.g. Delhi)" onChange={handleInputChange} required />
+              <input className="p-2 border border-gray-300 rounded" name="cargoType" placeholder="Cargo Type (e.g. Electronics)" onChange={handleInputChange} required />
+              <input className="p-2 border border-gray-300 rounded" name="vehicleTypeRequired" placeholder="Required Truck Type (e.g. Semi-Truck)" onChange={handleInputChange} required />
+              <input className="p-2 border border-gray-300 rounded" name="weight" type="number" placeholder="Max Weight (Tons)" onChange={handleInputChange} required />
+              <input className="p-2 border border-gray-300 rounded" name="price" type="number" placeholder="Price (₹)" onChange={handleInputChange} required />
+              <input className="p-2 border border-gray-300 rounded" name="pickupDate" type="date" onChange={handleInputChange} required />
+              <select className="p-2 border border-gray-300 rounded" name="loadType" onChange={handleInputChange} required>
                 <option value="FTL">Full Truck Load (FTL)</option>
                 <option value="PTL">Partial Truck Load (PTL)</option>
               </select>
             </div>
-            <button type="submit" className="btn-submit">Submit Load</button>
+            <button type="submit" className="self-start px-6 py-3 bg-teal-700 text-white rounded-lg hover:bg-teal-800 transition-colors">Submit Load</button>
           </form>
         </section>
       )}
 
       {trackingLoad && (
-          <section className="tracking-section" style={{ backgroundColor: '#fff', padding: '20px', borderRadius: '12px', marginBottom: '20px', border: '2px solid #00796B' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '15px' }}>
+          <section className="bg-white p-6 rounded-xl shadow-sm mb-6 border-2 border-teal-700">
+              <div className="flex justify-between items-start mb-4">
                 <div>
-                    <h2 style={{ margin: 0 }}>Tracking Load: {trackingLoad.load.cargoType}</h2>
-                    <p style={{ margin: '5px 0' }}>Status: <strong>{trackingLoad.load.status}</strong></p>
-                    <p style={{ margin: '5px 0' }}>Trucker: {trackingLoad.load.assignedTo?.name} ({trackingLoad.truckerProfile?.licensePlate || 'N/A'})</p>
+                    <h2 className="text-xl font-bold m-0">Tracking Load: {trackingLoad.load.cargoType}</h2>
+                    <p className="my-1">Status: <strong>{trackingLoad.load.status}</strong></p>
+                    <p className="my-1">Trucker: {trackingLoad.load.assignedTo?.name} ({trackingLoad.truckerProfile?.licensePlate || 'N/A'})</p>
                 </div>
-                <button className="btn-sm" onClick={() => setTrackingLoad(null)}>Close Tracker</button>
+                <button className="px-3 py-1.5 text-xs rounded-md border border-teal-700 bg-transparent text-teal-700 hover:bg-teal-700 hover:text-white transition-all" onClick={() => setTrackingLoad(null)}>Close Tracker</button>
               </div>
               <MapComponent 
                 lat={trackingLoad.truckerProfile?.currentLocation?.coordinates?.[1]} 
@@ -208,110 +207,93 @@ const BusinessDashboard = () => {
           </section>
       )}
 
-      <section className="dashboard-summary">
-        <div className="summary-card profile-card">
-          <h2>Profile Details</h2>
-          <p><strong>Contact:</strong> {profile?.contactPerson}</p>
-          <p><strong>Location:</strong> {profile?.location?.city}</p>
+      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="bg-white p-6 rounded-xl shadow-sm">
+          <h2 className="text-base font-medium text-gray-500 mb-2">Profile Details</h2>
+          <p className="text-sm font-semibold text-teal-900"><strong>Contact:</strong> {profile?.contactPerson}</p>
+          <p className="text-sm font-semibold text-teal-900"><strong>Location:</strong> {profile?.location?.city}</p>
         </div>
-        <div className="summary-card">
-          <h2>Total Loads</h2>
-          <p>{loads.length}</p>
+        <div className="bg-white p-6 rounded-xl shadow-sm">
+          <h2 className="text-base font-medium text-gray-500 mb-2">Total Loads</h2>
+          <p className="text-3xl font-bold text-teal-900">{loads.length}</p>
         </div>
-        <div className="summary-card">
-          <h2>Active</h2>
-          <p>{loads.filter(l => ['POSTED','MATCHED','ASSIGNED','IN_TRANSIT'].includes(l.status)).length}</p>
+        <div className="bg-white p-6 rounded-xl shadow-sm">
+          <h2 className="text-base font-medium text-gray-500 mb-2">Active</h2>
+          <p className="text-3xl font-bold text-teal-900">{loads.filter(l => ['POSTED','MATCHED','ASSIGNED','IN_TRANSIT'].includes(l.status)).length}</p>
         </div>
-        <div className="summary-card">
-          <h2>Completed</h2>
-          <p>{loads.filter(l => l.status === 'CLOSED').length}</p>
+        <div className="bg-white p-6 rounded-xl shadow-sm">
+          <h2 className="text-base font-medium text-gray-500 mb-2">Completed</h2>
+          <p className="text-3xl font-bold text-teal-900">{loads.filter(l => l.status === 'CLOSED').length}</p>
         </div>
       </section>
 
-      <main className="dashboard-main">
-        <div className="table-container">
-          <div className="tabs" style={{ marginBottom: '15px', borderBottom: '1px solid #ddd' }}>
+      <main className="bg-white p-8 rounded-xl shadow-sm">
+        <div className="w-full">
+          <div className="mb-4 border-b border-gray-200">
               <button 
                   onClick={() => setActiveTab("active")}
-                  style={{ 
-                      padding: '10px 20px', 
-                      marginRight: '10px',
-                      background: 'none',
-                      border: 'none',
-                      borderBottom: activeTab === 'active' ? '2px solid #00796B' : 'none',
-                      color: activeTab === 'active' ? '#00796B' : '#666',
-                      fontWeight: activeTab === 'active' ? '600' : '400',
-                      cursor: 'pointer'
-                  }}
+                  className={`py-2 px-4 mr-2 border-none bg-transparent cursor-pointer font-semibold ${activeTab === 'active' ? 'text-teal-700 border-b-2 border-teal-700' : 'text-gray-500'}`}
               >
                   Active Shipments
               </button>
               <button 
                   onClick={() => setActiveTab("history")}
-                  style={{ 
-                      padding: '10px 20px', 
-                      background: 'none',
-                      border: 'none',
-                      borderBottom: activeTab === 'history' ? '2px solid #00796B' : 'none',
-                      color: activeTab === 'history' ? '#00796B' : '#666',
-                      fontWeight: activeTab === 'history' ? '600' : '400',
-                      cursor: 'pointer'
-                  }}
+                  className={`py-2 px-4 bg-transparent border-none cursor-pointer font-semibold ${activeTab === 'history' ? 'text-teal-700 border-b-2 border-teal-700' : 'text-gray-500'}`}
               >
                   History
               </button>
           </div>
 
-          <h2>{activeTab === 'active' ? 'Active Shipments' : 'Past Shipments'}</h2>
-          <table>
+          <h2 className="text-2xl font-semibold mb-6">{activeTab === 'active' ? 'Active Shipments' : 'Past Shipments'}</h2>
+          <table className="w-full border-collapse">
             <thead>
               <tr>
-                <th>Cargo</th>
-                <th>Origin</th>
-                <th>Destination</th>
-                <th>Status</th>
-                <th>Assigned Trucker</th>
-                <th>Price</th>
-                <th>Actions</th>
+                <th className="text-left text-sm font-semibold text-gray-500 pb-4 border-b-2 border-teal-100">Cargo</th>
+                <th className="text-left text-sm font-semibold text-gray-500 pb-4 border-b-2 border-teal-100">Origin</th>
+                <th className="text-left text-sm font-semibold text-gray-500 pb-4 border-b-2 border-teal-100">Destination</th>
+                <th className="text-left text-sm font-semibold text-gray-500 pb-4 border-b-2 border-teal-100">Status</th>
+                <th className="text-left text-sm font-semibold text-gray-500 pb-4 border-b-2 border-teal-100">Assigned Trucker</th>
+                <th className="text-left text-sm font-semibold text-gray-500 pb-4 border-b-2 border-teal-100">Price</th>
+                <th className="text-left text-sm font-semibold text-gray-500 pb-4 border-b-2 border-teal-100">Actions</th>
               </tr>
             </thead>
             <tbody>
               {filteredLoads.map(load => (
                 <tr key={load._id}>
-                  <td>{load.cargoType}</td>
-                  <td>{load.origin}</td>
-                  <td>{load.destination}</td>
-                  <td><span className={`status-badge ${load.status.toLowerCase()}`}>{load.status}</span></td>
-                  <td>
+                  <td className="py-4 border-b border-teal-100">{load.cargoType}</td>
+                  <td className="py-4 border-b border-teal-100">{load.origin}</td>
+                  <td className="py-4 border-b border-teal-100">{load.destination}</td>
+                  <td className="py-4 border-b border-teal-100"><span className={`px-2 py-1 rounded-full text-xs font-semibold ${load.status === 'POSTED' ? 'bg-blue-100 text-blue-800' : load.status === 'MATCHED' ? 'bg-yellow-100 text-yellow-800' : load.status === 'ASSIGNED' ? 'bg-indigo-100 text-indigo-800' : load.status === 'IN_TRANSIT' ? 'bg-orange-100 text-orange-800' : 'bg-green-100 text-green-800'}`}>{load.status}</span></td>
+                  <td className="py-4 border-b border-teal-100">
                     {load.assignedTo ? (
                       <div>
                         <strong>{load.assignedTo.name}</strong>
                         <br />
-                        <small>{load.assignedTo.email}</small>
+                        <small className="text-gray-500">{load.assignedTo.email}</small>
                       </div>
                     ) : (
-                      <span className="text-muted">Pending</span>
+                      <span className="text-gray-400">Pending</span>
                     )}
                   </td>
-                  <td>₹ {load.price}</td>
-                  <td>
+                  <td className="py-4 border-b border-teal-100">₹ {load.price}</td>
+                  <td className="py-4 border-b border-teal-100 flex gap-2">
                       {load.status === 'MATCHED' && (
-                          <button className="btn-sm btn-action" onClick={() => handleAssign(load._id, load.assignedTo._id)}>
+                          <button className="px-3 py-1.5 text-xs rounded-md border border-teal-700 bg-transparent text-teal-700 hover:bg-teal-700 hover:text-white transition-all" onClick={() => handleAssign(load._id, load.assignedTo._id)}>
                               Confirm Assignment
                           </button>
                       )}
                       {load.status === 'DELIVERED' && (
-                          <button className="btn-sm btn-action" onClick={() => handleClose(load._id)}>
+                          <button className="px-3 py-1.5 text-xs rounded-md border border-teal-700 bg-transparent text-teal-700 hover:bg-teal-700 hover:text-white transition-all" onClick={() => handleClose(load._id)}>
                               Close & Verify
                           </button>
                       )}
                       {['IN_TRANSIT', 'DELIVERED'].includes(load.status) && (
-                          <button className="btn-sm" onClick={() => handleTrack(load._id)} style={{marginLeft: '5px'}}>
+                          <button className="px-3 py-1.5 text-xs rounded-md border border-teal-700 bg-transparent text-teal-700 hover:bg-teal-700 hover:text-white transition-all" onClick={() => handleTrack(load._id)}>
                               Track
                           </button>
                       )}
                       {(load.status === 'POSTED' || load.status === 'MATCHED') && (
-                          <button className="btn-sm btn-danger" onClick={() => handleCancel(load._id)} style={{marginLeft: '5px', color: 'red', borderColor: 'red'}}>
+                          <button className="px-3 py-1.5 text-xs rounded-md border border-red-500 bg-transparent text-red-500 hover:bg-red-500 hover:text-white transition-all" onClick={() => handleCancel(load._id)}>
                               Cancel
                           </button>
                       )}
@@ -320,7 +302,7 @@ const BusinessDashboard = () => {
               ))}
               {filteredLoads.length === 0 && (
                 <tr>
-                  <td colSpan="7" style={{ textAlign: 'center' }}>No {activeTab} loads found.</td>
+                  <td colSpan="7" className="py-8 text-center text-gray-500">No {activeTab} loads found.</td>
                 </tr>
               )}
             </tbody>
@@ -328,7 +310,7 @@ const BusinessDashboard = () => {
         </div>
       </main>
 
-      <footer className="dashboard-footer">
+      <footer className="text-center mt-8 text-gray-500">
         <p>&copy; 2025 SmartLogix. All rights reserved.</p>
       </footer>
     </div>
