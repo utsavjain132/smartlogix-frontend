@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import './AdminDashboard.css';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "https://93fd18fg-5000.inc1.devtunnels.ms/api";
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState(null);
@@ -38,60 +37,66 @@ const AdminDashboard = () => {
     fetchData();
   }, []);
 
-  if (loading) return <div className="dashboard-container">Loading Admin Panel...</div>;
+  if (loading) return <div className="p-8 bg-gray-50 min-h-screen font-sans text-gray-900">Loading Admin Panel...</div>;
 
   return (
-    <div className="dashboard-container admin-dashboard">
-      <header className="dashboard-header">
-        <h1>Admin Control Center</h1>
-        <div className="dashboard-actions">
-          <button className={`btn-secondary ${view === 'stats' ? 'active' : ''}`} onClick={() => setView("stats")}>Overview</button>
-          <button className={`btn-secondary ${view === 'users' ? 'active' : ''}`} onClick={() => setView("users")}>Users</button>
-          <button className={`btn-secondary ${view === 'loads' ? 'active' : ''}`} onClick={() => setView("loads")}>All Loads</button>
+    <div className="p-8 bg-gray-50 min-h-screen font-sans text-gray-900">
+      <header className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold">Admin Control Center</h1>
+        <div className="flex gap-2">
+          <button className={`px-4 py-2 border rounded text-base cursor-pointer transition-colors ${view === 'stats' ? 'bg-gray-800 text-white border-gray-800' : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-100'}`} onClick={() => setView("stats")}>Overview</button>
+          <button className={`px-4 py-2 border rounded text-base cursor-pointer transition-colors ${view === 'users' ? 'bg-gray-800 text-white border-gray-800' : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-100'}`} onClick={() => setView("users")}>Users</button>
+          <button className={`px-4 py-2 border rounded text-base cursor-pointer transition-colors ${view === 'loads' ? 'bg-gray-800 text-white border-gray-800' : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-100'}`} onClick={() => setView("loads")}>All Loads</button>
         </div>
       </header>
 
       {view === "stats" && stats && (
-        <section className="dashboard-summary">
-          <div className="summary-card">
-            <h2>Total Users</h2>
-            <p>{stats.totalUsers}</p>
+        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="bg-white p-6 rounded-lg shadow">
+            <h2 className="text-sm font-medium text-gray-500 mb-2">Total Users</h2>
+            <p className="text-3xl font-bold text-gray-900">{stats.totalUsers}</p>
           </div>
-          <div className="summary-card">
-            <h2>Total Loads</h2>
-            <p>{stats.totalLoads}</p>
+          <div className="bg-white p-6 rounded-lg shadow">
+            <h2 className="text-sm font-medium text-gray-500 mb-2">Total Loads</h2>
+            <p className="text-3xl font-bold text-gray-900">{stats.totalLoads}</p>
           </div>
-          <div className="summary-card">
-            <h2>Businesses</h2>
-            <p>{stats.businessUsers}</p>
+          <div className="bg-white p-6 rounded-lg shadow">
+            <h2 className="text-sm font-medium text-gray-500 mb-2">Businesses</h2>
+            <p className="text-3xl font-bold text-gray-900">{stats.businessUsers}</p>
           </div>
-          <div className="summary-card">
-            <h2>Truckers</h2>
-            <p>{stats.truckerUsers}</p>
+          <div className="bg-white p-6 rounded-lg shadow">
+            <h2 className="text-sm font-medium text-gray-500 mb-2">Truckers</h2>
+            <p className="text-3xl font-bold text-gray-900">{stats.truckerUsers}</p>
           </div>
         </section>
       )}
 
       {view === "users" && (
-        <main className="dashboard-main">
-          <div className="table-container">
-            <h2>Platform Users</h2>
-            <table>
+        <main className="bg-white p-8 rounded-lg shadow">
+          <div className="w-full overflow-x-auto">
+            <h2 className="text-xl font-semibold mb-6">Platform Users</h2>
+            <table className="w-full text-left border-collapse">
               <thead>
                 <tr>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Role</th>
-                  <th>Created At</th>
+                  <th className="pb-4 border-b font-semibold text-gray-600">Name</th>
+                  <th className="pb-4 border-b font-semibold text-gray-600">Email</th>
+                  <th className="pb-4 border-b font-semibold text-gray-600">Role</th>
+                  <th className="pb-4 border-b font-semibold text-gray-600">Created At</th>
                 </tr>
               </thead>
               <tbody>
                 {users.map(u => (
                   <tr key={u._id}>
-                    <td>{u.name}</td>
-                    <td>{u.email}</td>
-                    <td><span className={`role-badge ${u.role.toLowerCase()}`}>{u.role}</span></td>
-                    <td>{new Date(u.createdAt).toLocaleDateString()}</td>
+                    <td className="py-4 border-b border-gray-100">{u.name}</td>
+                    <td className="py-4 border-b border-gray-100">{u.email}</td>
+                    <td className="py-4 border-b border-gray-100">
+                      <span className={`px-2 py-1 rounded text-xs font-bold ${
+                        u.role === 'admin' ? 'bg-yellow-400 text-black' : 
+                        u.role === 'business' ? 'bg-blue-500 text-white' : 
+                        'bg-green-500 text-white'
+                      }`}>{u.role}</span>
+                    </td>
+                    <td className="py-4 border-b border-gray-100">{new Date(u.createdAt).toLocaleDateString()}</td>
                   </tr>
                 ))}
               </tbody>
@@ -101,27 +106,35 @@ const AdminDashboard = () => {
       )}
 
       {view === "loads" && (
-        <main className="dashboard-main">
-          <div className="table-container">
-            <h2>All Freight Records</h2>
-            <table>
+        <main className="bg-white p-8 rounded-lg shadow">
+          <div className="w-full overflow-x-auto">
+            <h2 className="text-xl font-semibold mb-6">All Freight Records</h2>
+            <table className="w-full text-left border-collapse">
               <thead>
                 <tr>
-                  <th>Origin</th>
-                  <th>Destination</th>
-                  <th>Status</th>
-                  <th>Price</th>
-                  <th>Created By</th>
+                  <th className="pb-4 border-b font-semibold text-gray-600">Origin</th>
+                  <th className="pb-4 border-b font-semibold text-gray-600">Destination</th>
+                  <th className="pb-4 border-b font-semibold text-gray-600">Status</th>
+                  <th className="pb-4 border-b font-semibold text-gray-600">Price</th>
+                  <th className="pb-4 border-b font-semibold text-gray-600">Created By</th>
                 </tr>
               </thead>
               <tbody>
                 {loads.map(l => (
                   <tr key={l._id}>
-                    <td>{l.origin}</td>
-                    <td>{l.destination}</td>
-                    <td><span className={`status-badge ${l.status.toLowerCase()}`}>{l.status}</span></td>
-                    <td>₹ {l.price}</td>
-                    <td>{l.createdBy?.name || "N/A"}</td>
+                    <td className="py-4 border-b border-gray-100">{l.origin}</td>
+                    <td className="py-4 border-b border-gray-100">{l.destination}</td>
+                    <td className="py-4 border-b border-gray-100">
+                      <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                        l.status === 'POSTED' ? 'bg-blue-100 text-blue-800' : 
+                        l.status === 'MATCHED' ? 'bg-yellow-100 text-yellow-800' : 
+                        l.status === 'ASSIGNED' ? 'bg-indigo-100 text-indigo-800' : 
+                        l.status === 'IN_TRANSIT' ? 'bg-orange-100 text-orange-800' : 
+                        'bg-green-100 text-green-800'
+                      }`}>{l.status}</span>
+                    </td>
+                    <td className="py-4 border-b border-gray-100">₹ {l.price}</td>
+                    <td className="py-4 border-b border-gray-100">{l.createdBy?.name || "N/A"}</td>
                   </tr>
                 ))}
               </tbody>
@@ -130,7 +143,7 @@ const AdminDashboard = () => {
         </main>
       )}
 
-      <footer className="dashboard-footer">
+      <footer className="text-center mt-8 text-gray-500">
         <p>&copy; 2025 SmartLogix Admin. All rights reserved.</p>
       </footer>
     </div>
