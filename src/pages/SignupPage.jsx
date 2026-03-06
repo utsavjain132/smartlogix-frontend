@@ -2,9 +2,19 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { apiRequest } from "../services/api";
-import "./SignupPage.css";
-import EyeIcon from "../assets/icons/eye.svg";
-import EyeOffIcon from "../assets/icons/eye-off.svg";
+import { Eye, EyeOff } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 const SignupPage = () => {
   // Step 1 State
@@ -12,7 +22,7 @@ const SignupPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("BUSINESS");
-  
+
   // Step 2 State (Profile Data)
   const [profileData, setProfileData] = useState({
     businessName: "",
@@ -122,229 +132,250 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="signup-container">
-      <div className="signup-card">
-        <div className="signup-header">
-          <h1>Create Account</h1>
-          <p>{step === 1 ? "Sign up to get started" : "Complete your profile"}</p>
-        </div>
-
-        <form className="signup-form" onSubmit={step === 1 ? handleNext : handleFinalSignup}>
-          {error && <p className="error-message">{error}</p>}
-
-          {step === 1 && (
-            <>
-              <div className="input-group">
-                <label htmlFor="name">Full Name</label>
-                <input
-                  id="name"
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                />
+    <div className="flex items-center justify-center min-h-screen bg-slate-50 p-4">
+      <Card className="w-full max-w-lg shadow-lg">
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-2xl font-bold text-center">Create Account</CardTitle>
+          <CardDescription className="text-center text-slate-500">
+            {step === 1 ? "Sign up to get started" : "Complete your profile"}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={step === 1 ? handleNext : handleFinalSignup} className="space-y-4">
+            {error && (
+              <div className="p-3 text-sm text-red-500 bg-red-50 rounded-md text-center">
+                {error}
               </div>
+            )}
 
-              <div className="input-group">
-                <label htmlFor="email">Email</label>
-                <input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className="input-group">
-                <label htmlFor="password">Password</label>
-                <div className="password-wrapper">
-                  <input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+            {step === 1 && (
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="name">Full Name</Label>
+                  <Input
+                    id="name"
+                    type="text"
+                    placeholder="John Doe"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     required
                   />
-                  <button
-                    type="button"
-                    className="toggle-password"
-                    onClick={() => setShowPassword((s) => !s)}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="m@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="password">Password</Label>
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4 text-slate-500" />
+                      ) : (
+                        <Eye className="h-4 w-4 text-slate-500" />
+                      )}
+                      <span className="sr-only">Toggle password visibility</span>
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>I am a:</Label>
+                  <RadioGroup
+                    value={role}
+                    onValueChange={setRole}
+                    className="flex flex-col sm:flex-row gap-4"
                   >
-                    <img
-                      src={showPassword ? EyeOffIcon : EyeIcon}
-                      alt="Toggle password visibility"
-                    />
-                  </button>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="TRUCKER" id="role-trucker" />
+                      <Label htmlFor="role-trucker" className="font-normal cursor-pointer">
+                        Trucker
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="BUSINESS" id="role-business" />
+                      <Label htmlFor="role-business" className="font-normal cursor-pointer">
+                        Business
+                      </Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+
+                <Button type="submit" className="w-full mt-4">
+                  Next
+                </Button>
+              </div>
+            )}
+
+            {step === 2 && (
+              <div className="space-y-4">
+                {role === "BUSINESS" ? (
+                  <>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="businessName">Business Name</Label>
+                        <Input
+                          id="businessName"
+                          name="businessName"
+                          type="text"
+                          value={profileData.businessName}
+                          onChange={handleProfileChange}
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="businessType">Business Type</Label>
+                        <Input
+                          id="businessType"
+                          name="businessType"
+                          type="text"
+                          placeholder="e.g. Distributor"
+                          value={profileData.businessType}
+                          onChange={handleProfileChange}
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="contactPerson">Contact Person</Label>
+                        <Input
+                          id="contactPerson"
+                          name="contactPerson"
+                          type="text"
+                          value={profileData.contactPerson}
+                          onChange={handleProfileChange}
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="contactPhone">Phone Number</Label>
+                        <Input
+                          id="contactPhone"
+                          name="contactPhone"
+                          type="text"
+                          value={profileData.contactPhone}
+                          onChange={handleProfileChange}
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="city">City</Label>
+                        <Input
+                          id="city"
+                          name="city"
+                          type="text"
+                          value={profileData.city}
+                          onChange={handleProfileChange}
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="state">State</Label>
+                        <Input
+                          id="state"
+                          name="state"
+                          type="text"
+                          value={profileData.state}
+                          onChange={handleProfileChange}
+                        />
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="space-y-2">
+                      <Label htmlFor="vehicleType">Vehicle Type</Label>
+                      <Input
+                        id="vehicleType"
+                        name="vehicleType"
+                        type="text"
+                        placeholder="e.g. Semi-Truck"
+                        value={profileData.vehicleType}
+                        onChange={handleProfileChange}
+                        required
+                      />
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="capacity">Capacity (tons)</Label>
+                        <Input
+                          id="capacity"
+                          name="capacity"
+                          type="number"
+                          value={profileData.capacity}
+                          onChange={handleProfileChange}
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="city">Current City</Label>
+                        <Input
+                          id="city"
+                          name="city"
+                          type="text"
+                          value={profileData.city}
+                          onChange={handleProfileChange}
+                          required
+                        />
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                <div className="flex gap-4 pt-2">
+                  <Button type="button" variant="outline" className="w-full" onClick={handleBack}>
+                    Back
+                  </Button>
+                  <Button type="submit" className="w-full">
+                    Create Account
+                  </Button>
                 </div>
               </div>
-
-              <div className="input-group">
-                <label>I am a:</label>
-                <div className="radio-group">
-                  <label>
-                    <input
-                      type="radio"
-                      value="TRUCKER"
-                      checked={role === "TRUCKER"}
-                      onChange={(e) => setRole(e.target.value)}
-                    />
-                    Trucker
-                  </label>
-                  <label>
-                    <input
-                      type="radio"
-                      value="BUSINESS"
-                      checked={role === "BUSINESS"}
-                      onChange={(e) => setRole(e.target.value)}
-                    />
-                    Business
-                  </label>
-                </div>
-              </div>
-
-              <button type="submit" className="btn-signup">
-                Next
-              </button>
-            </>
+            )}
+          </form>
+        </CardContent>
+        <CardFooter className="flex flex-col gap-2">
+          {step === 1 && (
+            <div className="text-center text-sm text-slate-600">
+              Already have an account?{" "}
+              <Link to="/login" className="text-primary hover:underline font-medium">
+                Log in
+              </Link>
+            </div>
           )}
-
-          {step === 2 && (
-            <>
-              {role === "BUSINESS" ? (
-                <>
-                  <div className="input-group">
-                    <label htmlFor="businessName">Business Name</label>
-                    <input
-                      id="businessName"
-                      name="businessName"
-                      type="text"
-                      value={profileData.businessName}
-                      onChange={handleProfileChange}
-                      required
-                    />
-                  </div>
-                  <div className="input-group">
-                    <label htmlFor="businessType">Business Type</label>
-                    <input
-                      id="businessType"
-                      name="businessType"
-                      type="text"
-                      placeholder="e.g. Distributor"
-                      value={profileData.businessType}
-                      onChange={handleProfileChange}
-                      required
-                    />
-                  </div>
-                  <div className="input-group">
-                    <label htmlFor="contactPerson">Contact Person</label>
-                    <input
-                      id="contactPerson"
-                      name="contactPerson"
-                      type="text"
-                      value={profileData.contactPerson}
-                      onChange={handleProfileChange}
-                      required
-                    />
-                  </div>
-                  <div className="input-group">
-                    <label htmlFor="contactPhone">Phone Number</label>
-                    <input
-                      id="contactPhone"
-                      name="contactPhone"
-                      type="text"
-                      value={profileData.contactPhone}
-                      onChange={handleProfileChange}
-                      required
-                    />
-                  </div>
-                  <div className="input-group">
-                    <label htmlFor="city">City</label>
-                    <input
-                      id="city"
-                      name="city"
-                      type="text"
-                      value={profileData.city}
-                      onChange={handleProfileChange}
-                      required
-                    />
-                  </div>
-                  <div className="input-group">
-                    <label htmlFor="state">State</label>
-                    <input
-                      id="state"
-                      name="state"
-                      type="text"
-                      value={profileData.state}
-                      onChange={handleProfileChange}
-                    />
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="input-group">
-                    <label htmlFor="vehicleType">Vehicle Type</label>
-                    <input
-                      id="vehicleType"
-                      name="vehicleType"
-                      type="text"
-                      placeholder="e.g. Semi-Truck"
-                      value={profileData.vehicleType}
-                      onChange={handleProfileChange}
-                      required
-                    />
-                  </div>
-                  <div className="input-group">
-                    <label htmlFor="capacity">Capacity (tons)</label>
-                    <input
-                      id="capacity"
-                      name="capacity"
-                      type="number"
-                      value={profileData.capacity}
-                      onChange={handleProfileChange}
-                      required
-                    />
-                  </div>
-                  <div className="input-group">
-                    <label htmlFor="city">Current City</label>
-                    <input
-                      id="city"
-                      name="city"
-                      type="text"
-                      value={profileData.city}
-                      onChange={handleProfileChange}
-                      required
-                    />
-                  </div>
-                </>
-              )}
-
-              <div className="form-actions">
-                <button type="button" className="btn-back" onClick={handleBack}>
-                  Back
-                </button>
-                <button type="submit" className="btn-signup">
-                  Create Account
-                </button>
-              </div>
-            </>
-          )}
-        </form>
-
-        {step === 1 && (
-          <div className="login-link">
-            <p>
-              Already have an account? <Link to="/login">Log in</Link>
-            </p>
+          <div className="text-center text-sm text-slate-600">
+            Back to{" "}
+            <Link to="/" className="text-primary hover:underline font-medium">
+              Home
+            </Link>
           </div>
-        )}
-
-        <div className="home-link">
-          <p>
-            Back to <Link to="/">Home</Link>
-          </p>
-        </div>
-      </div>
+        </CardFooter>
+      </Card>
     </div>
   );
 };
