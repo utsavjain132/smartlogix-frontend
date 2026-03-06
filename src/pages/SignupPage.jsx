@@ -132,7 +132,11 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-slate-50 p-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-background p-4 gap-6">
+      {/* Brand mark */}
+      <Link to="/" className="flex items-center gap-2 text-2xl font-bold text-foreground">
+        🚛 SmartLogix
+      </Link>
       <Card className="w-full max-w-lg shadow-lg">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center">Create Account</CardTitle>
