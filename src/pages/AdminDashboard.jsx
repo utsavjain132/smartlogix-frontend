@@ -37,10 +37,10 @@ const AdminDashboard = () => {
     fetchData();
   }, []);
 
-  if (loading) return <div className="p-8 bg-gray-50 min-h-screen font-sans text-gray-900">Loading Admin Panel...</div>;
+  if (loading) return <div className="p-8">Loading Admin Panel...</div>;
 
   return (
-    <div className="p-8 bg-gray-50 min-h-screen font-sans text-gray-900">
+    <div>
       <header className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Admin Control Center</h1>
         <div className="flex gap-2">

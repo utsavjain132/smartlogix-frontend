@@ -153,11 +153,11 @@ const BusinessDashboard = () => {
       }
   };
 
-  if (loading) return <div className="p-8 bg-teal-50 min-h-screen font-sans text-teal-900">Loading...</div>;
-  if (error) return <div className="p-8 bg-teal-50 min-h-screen font-sans text-teal-900">Error: {error}</div>;
+  if (loading) return <div className="p-8">Loading...</div>;
+  if (error) return <div className="p-8 text-destructive">Error: {error}</div>;
 
   return (
-    <div className="p-8 bg-teal-50 min-h-screen font-sans text-teal-900">
+    <div>
       <header className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">{profile?.businessName || "Business Dashboard"}</h1>
         <div className="flex">

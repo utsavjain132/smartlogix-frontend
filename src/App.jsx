@@ -4,6 +4,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
+import DashboardShell from './components/DashboardShell';
 import Home from './pages/Home';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
@@ -14,7 +15,7 @@ import ContactPage from './pages/ContactPage';
 
 function App() {
   return (
-    <div className="text-center min-h-screen bg-[#f4f7f6] font-sans antialiased animate-in fade-in slide-in-from-bottom-2 duration-500">
+    <div className="font-sans antialiased">
       <Router>
         <Navbar />
         <ToastContainer position="top-right" autoClose={3000} />
@@ -27,7 +28,9 @@ function App() {
             path="/business-dashboard" 
             element={
               <ProtectedRoute allowedRole="BUSINESS">
-                <BusinessDashboard />
+                <DashboardShell role="BUSINESS">
+                  <BusinessDashboard />
+                </DashboardShell>
               </ProtectedRoute>
             } 
           />
@@ -45,7 +48,9 @@ function App() {
             path="/admin-dashboard" 
             element={
               <ProtectedRoute allowedRole="ADMIN">
-                <AdminDashboard />
+                <DashboardShell role="ADMIN">
+                  <AdminDashboard />
+                </DashboardShell>
               </ProtectedRoute>
             } 
           />
