@@ -33,4 +33,24 @@ describe('LoginPage', () => {
     // Verify welcome text
     expect(screen.getByText(/welcome back/i)).toBeInTheDocument();
   });
+
+  it('renders on bg-background container (no bg-slate-50)', () => {
+    const { container } = render(
+      <MemoryRouter>
+        <LoginPage />
+      </MemoryRouter>
+    );
+    const outerDiv = container.firstChild;
+    expect(outerDiv.className).not.toContain('bg-slate-50');
+    expect(outerDiv.className).toContain('bg-background');
+  });
+
+  it('renders SmartLogix brand mark link above the card', () => {
+    render(
+      <MemoryRouter>
+        <LoginPage />
+      </MemoryRouter>
+    );
+    expect(screen.getByRole('link', { name: /smartlogix/i })).toBeInTheDocument();
+  });
 });
