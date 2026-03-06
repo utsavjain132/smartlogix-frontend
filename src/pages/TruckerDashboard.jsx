@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { apiRequest } from '../services/api';
 import MapComponent from '../components/MapComponent';
-import './TruckerDashboard.css';
 
 const TruckerDashboard = () => {
   const [profile, setProfile] = useState(null);
@@ -102,33 +101,45 @@ const TruckerDashboard = () => {
   const completedJobs = myJobs.filter(job => ["DELIVERED", "CLOSED", "CANCELLED"].includes(job.status));
   const totalEarnings = completedJobs.filter(j => j.status === 'CLOSED').reduce((sum, job) => sum + (job.price || 0), 0); // Only count earnings for CLOSED (verified) jobs
 
-  if (loading) return <div className="dashboard-container">Loading...</div>;
-  if (error) return <div className="dashboard-container">Error: {error}</div>;
+  if (loading) return <div className="p-8 text-center text-slate-500">Loading...</div>;
+  if (error) return <div className="p-8 text-center text-red-500">Error: {error}</div>;
 
   return (
-    <div className="dashboard-container">
-      <header className="dashboard-header">
-        <h1>Trucker Dashboard</h1>
-        <div className="dashboard-actions">
-          <button className="btn-primary" onClick={() => document.getElementById('available-loads').scrollIntoView({ behavior: 'smooth' })}>Find New Loads</button>
+    <div className="min-h-screen bg-slate-50 p-6 md:p-8 font-sans text-slate-900">
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+        <h1 className="text-3xl font-bold tracking-tight text-slate-900">Trucker Dashboard</h1>
+        <div className="flex gap-4">
+          <button 
+            className="px-6 py-2.5 rounded-lg bg-slate-900 text-white font-medium hover:bg-slate-800 transition-colors shadow-sm"
+            onClick={() => document.getElementById('available-loads').scrollIntoView({ behavior: 'smooth' })}
+          >
+            Find New Loads
+          </button>
         </div>
       </header>
 
-      <section className="dashboard-summary">
-        <div className="summary-card profile-card">
-          <h2>My Rig</h2>
-          <p><strong>Vehicle:</strong> {profile?.vehicleType}</p>
-          <p><strong>Capacity:</strong> {profile?.availableCapacity} / {profile?.capacity} Tons</p>
-          <p><strong>Base:</strong> {profile?.currentLocation?.city}</p>
+      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+          <h2 className="text-sm font-medium text-slate-500 mb-2">My Rig</h2>
+          <p className="text-lg font-semibold text-slate-900">Vehicle: <span className="font-normal">{profile?.vehicleType}</span></p>
+          <p className="text-sm text-slate-600 mt-1">Capacity: {profile?.availableCapacity} / {profile?.capacity} Tons</p>
+          <p className="text-sm text-slate-600">Base: {profile?.currentLocation?.city}</p>
         </div>
         
         {activeJob ? (
-          <div className="summary-card active-job-card" style={{borderColor: '#28a745', gridColumn: 'span 2'}}>
-            <h2>Current Job: {activeJob.status}</h2>
-            <p><strong>To:</strong> {activeJob.destination}</p>
-            <p><strong>Pay:</strong> ₹ {activeJob.price}</p>
+          <div className="bg-white p-6 rounded-xl shadow-sm border-2 border-green-500 col-span-1 md:col-span-2 lg:col-span-2 relative overflow-hidden">
+            <div className="flex justify-between items-start mb-4">
+              <div>
+                <h2 className="text-sm font-medium text-green-600 uppercase tracking-wide">Current Job: {activeJob.status}</h2>
+                <p className="text-xl font-bold text-slate-900 mt-1">To: {activeJob.destination}</p>
+                <p className="text-lg font-semibold text-slate-700">Pay: ₹ {activeJob.price}</p>
+              </div>
+              {activeJob.status === "MATCHED" && (
+                <span className="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-medium rounded-full">Pending Approval</span>
+              )}
+            </div>
             
-            <div style={{ margin: '15px 0' }}>
+            <div className="my-4 h-48 rounded-lg overflow-hidden border border-slate-200">
               <MapComponent 
                 lat={profile?.currentLocation?.coordinates?.[1]} 
                 lng={profile?.currentLocation?.coordinates?.[0]} 
@@ -138,86 +149,101 @@ const TruckerDashboard = () => {
               />
             </div>
 
-            <div style={{ display: 'flex', gap: '10px' }}>
+            <div className="flex flex-wrap gap-3 mt-4">
                 {activeJob.status === "ASSIGNED" && (
-                    <button className="btn-sm btn-success" onClick={() => handlePickupLoad(activeJob._id)} style={{background: '#007bff', color: '#fff', border: 'none', padding: '8px 15px', borderRadius: '4px', cursor: 'pointer'}}>
+                    <button 
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm text-sm font-medium"
+                      onClick={() => handlePickupLoad(activeJob._id)}
+                    >
                     Confirm Pickup
                     </button>
                 )}
 
                 {activeJob.status === "IN_TRANSIT" && (
-                    <button className="btn-sm btn-success" onClick={() => handleDeliverLoad(activeJob._id)} style={{background: '#28a745', color: '#fff', border: 'none', padding: '8px 15px', borderRadius: '4px', cursor: 'pointer'}}>
+                    <button 
+                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-sm text-sm font-medium"
+                      onClick={() => handleDeliverLoad(activeJob._id)}
+                    >
                     Confirm Delivery
                     </button>
                 )}
 
-                <button onClick={() => syncLocation(true)} className="btn-sm" style={{ padding: '8px 15px' }}>
+                <button 
+                  onClick={() => syncLocation(true)} 
+                  className="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors text-sm font-medium bg-white"
+                >
                     Update GPS
                 </button>
             </div>
 
              {activeJob.status === "MATCHED" && (
-                <small style={{display: 'block', marginTop: '10px', fontSize: '0.8rem', color: '#666'}}>Waiting for Business Approval...</small>
+                <p className="mt-3 text-sm text-slate-500 italic">Waiting for Business Approval...</p>
             )}
           </div>
         ) : (
-           <div className="summary-card">
-            <h2>Active Job</h2>
-            <p>None</p>
-            <p style={{fontSize: '0.9rem', fontWeight: 'normal'}}>Search available loads below</p>
+           <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+            <h2 className="text-sm font-medium text-slate-500 mb-2">Active Job</h2>
+            <p className="text-xl font-bold text-slate-400">None</p>
+            <p className="text-sm text-slate-500 mt-2">Search available loads below</p>
           </div>
         )}
 
-        <div className="summary-card">
-          <h2>Completed Trips</h2>
-          <p>{completedJobs.length}</p>
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+          <h2 className="text-sm font-medium text-slate-500 mb-2">Completed Trips</h2>
+          <p className="text-3xl font-bold text-slate-900">{completedJobs.length}</p>
         </div>
-        <div className="summary-card">
-          <h2>Verified Earnings</h2>
-          <p>₹ {totalEarnings.toLocaleString()}</p>
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+          <h2 className="text-sm font-medium text-slate-500 mb-2">Verified Earnings</h2>
+          <p className="text-3xl font-bold text-slate-900">₹ {totalEarnings.toLocaleString()}</p>
         </div>
       </section>
 
-      <main className="dashboard-main" id="available-loads">
-        <div className="table-container">
-          <h2>Available Loads Near You</h2>
-          <table>
+      <main className="bg-white p-6 md:p-8 rounded-xl shadow-sm border border-slate-200 mb-8" id="available-loads">
+        <div className="overflow-x-auto">
+          <h2 className="text-xl font-semibold mb-6 text-slate-900">Available Loads Near You</h2>
+          <table className="w-full text-left border-collapse">
             <thead>
               <tr>
-                <th>Cargo</th>
-                <th>Type</th>
-                <th>Origin</th>
-                <th>Destination</th>
-                <th>Payout</th>
-                <th>Weight</th>
-                <th>Actions</th>
+                <th className="pb-4 border-b border-slate-200 text-sm font-semibold text-slate-500 uppercase tracking-wider">Cargo</th>
+                <th className="pb-4 border-b border-slate-200 text-sm font-semibold text-slate-500 uppercase tracking-wider">Type</th>
+                <th className="pb-4 border-b border-slate-200 text-sm font-semibold text-slate-500 uppercase tracking-wider">Origin</th>
+                <th className="pb-4 border-b border-slate-200 text-sm font-semibold text-slate-500 uppercase tracking-wider">Destination</th>
+                <th className="pb-4 border-b border-slate-200 text-sm font-semibold text-slate-500 uppercase tracking-wider">Payout</th>
+                <th className="pb-4 border-b border-slate-200 text-sm font-semibold text-slate-500 uppercase tracking-wider">Weight</th>
+                <th className="pb-4 border-b border-slate-200 text-sm font-semibold text-slate-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-slate-100">
               {availableLoads.map(load => (
-                <tr key={load._id}>
-                  <td>{load.cargoType}</td>
-                  <td><span className={`status-badge ${load.loadType === 'FTL' ? 'admin' : 'business'}`} style={{fontSize: '0.8rem'}}>{load.loadType}</span></td>
-                  <td>{load.origin}</td>
-                  <td>{load.destination}</td>
-                  <td>₹ {load.price}</td>
-                  <td>{load.weight} Tons</td>
-                  <td>
+                <tr key={load._id} className="hover:bg-slate-50 transition-colors">
+                  <td className="py-4 text-slate-900 font-medium">{load.cargoType}</td>
+                  <td className="py-4">
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                      load.loadType === 'FTL' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'
+                    }`}>
+                      {load.loadType}
+                    </span>
+                  </td>
+                  <td className="py-4 text-slate-600">{load.origin}</td>
+                  <td className="py-4 text-slate-600">{load.destination}</td>
+                  <td className="py-4 text-slate-900 font-semibold">₹ {load.price}</td>
+                  <td className="py-4 text-slate-600">{load.weight} Tons</td>
+                  <td className="py-4">
                     {!activeJob && (
                         <button 
-                        className="btn-sm" 
+                        className="px-3 py-1.5 text-sm rounded border border-slate-900 text-slate-900 hover:bg-slate-900 hover:text-white transition-colors" 
                         onClick={() => handleAcceptLoad(load._id)}
                         >
                         Request Load
                         </button>
                     )}
-                    {activeJob && <span className="text-muted" style={{fontSize: '0.8rem'}}>Finish current job first</span>}
+                    {activeJob && <span className="text-xs text-slate-400 italic">Finish current job first</span>}
                   </td>
                 </tr>
               ))}
               {availableLoads.length === 0 && (
                 <tr>
-                  <td colSpan="6" style={{ textAlign: 'center' }}>No available loads found.</td>
+                  <td colSpan="7" className="py-8 text-center text-slate-500">No available loads found.</td>
                 </tr>
               )}
             </tbody>
@@ -225,24 +251,31 @@ const TruckerDashboard = () => {
         </div>
 
         {completedJobs.length > 0 && (
-            <div className="table-container" style={{ marginTop: '30px' }}>
-            <h2>Job History</h2>
-            <table>
+            <div className="mt-12 overflow-x-auto">
+            <h2 className="text-xl font-semibold mb-6 text-slate-900">Job History</h2>
+            <table className="w-full text-left border-collapse">
                 <thead>
                 <tr>
-                    <th>Date</th>
-                    <th>Route</th>
-                    <th>Status</th>
-                    <th>Earnings</th>
+                    <th className="pb-4 border-b border-slate-200 text-sm font-semibold text-slate-500 uppercase tracking-wider">Date</th>
+                    <th className="pb-4 border-b border-slate-200 text-sm font-semibold text-slate-500 uppercase tracking-wider">Route</th>
+                    <th className="pb-4 border-b border-slate-200 text-sm font-semibold text-slate-500 uppercase tracking-wider">Status</th>
+                    <th className="pb-4 border-b border-slate-200 text-sm font-semibold text-slate-500 uppercase tracking-wider">Earnings</th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody className="divide-y divide-slate-100">
                 {completedJobs.map(job => (
-                    <tr key={job._id}>
-                    <td>{new Date(job.updatedAt).toLocaleDateString()}</td>
-                    <td>{job.origin} → {job.destination}</td>
-                    <td><span className={`status-badge ${job.status.toLowerCase()}`}>{job.status}</span></td>
-                    <td>₹ {job.status === 'CLOSED' ? job.price : 0}</td>
+                    <tr key={job._id} className="hover:bg-slate-50 transition-colors">
+                    <td className="py-4 text-slate-600">{new Date(job.updatedAt).toLocaleDateString()}</td>
+                    <td className="py-4 text-slate-600">{job.origin} → {job.destination}</td>
+                    <td className="py-4">
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                            job.status === 'DELIVERED' ? 'bg-green-100 text-green-800' : 
+                            job.status === 'CLOSED' ? 'bg-slate-100 text-slate-800' : 'bg-red-100 text-red-800'
+                        }`}>
+                            {job.status}
+                        </span>
+                    </td>
+                    <td className="py-4 text-slate-900 font-medium">₹ {job.status === 'CLOSED' ? job.price : 0}</td>
                     </tr>
                 ))}
                 </tbody>
@@ -251,7 +284,7 @@ const TruckerDashboard = () => {
         )}
       </main>
 
-      <footer className="dashboard-footer">
+      <footer className="text-center mt-12 mb-4 text-slate-400 text-sm">
         <p>&copy; 2025 SmartLogix. All rights reserved.</p>
       </footer>
     </div>
