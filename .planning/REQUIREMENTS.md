@@ -17,10 +17,10 @@ Requirements for the initial UI/UX revamp release.
 
 ### App Shells & Layouts
 
-- [ ] **LAYT-01**: Create a sticky sidebar navigation layout for the Business and Admin dashboards (Desktop).
-- [ ] **LAYT-02**: Create a mobile-first bottom navigation or hamburger layout for the Trucker dashboard.
-- [ ] **LAYT-03**: Redesign the public Landing Page (`Home.jsx`) with a modern SaaS aesthetic, strong CTAs, and feature cards.
-- [ ] **LAYT-04**: Redesign Auth pages (Login, Signup) into centered, clean card layouts.
+- [x] **LAYT-01**: Create a sticky sidebar navigation layout for the Business and Admin dashboards (Desktop).
+- [x] **LAYT-02**: Create a mobile-first bottom navigation or hamburger layout for the Trucker dashboard.
+- [x] **LAYT-03**: Redesign the public Landing Page (`Home.jsx`) with a modern SaaS aesthetic, strong CTAs, and feature cards.
+- [x] **LAYT-04**: Redesign Auth pages (Login, Signup) into centered, clean card layouts.
 
 ### Core Data Views
 
@@ -64,10 +64,10 @@ Deferred to future releases.
 | INFR-03 | Phase 1 | Complete |
 | INFR-04 | Phase 1 | Complete |
 | INFR-05 | Phase 1 | Complete |
-| LAYT-01 | Phase 2 | Pending |
-| LAYT-02 | Phase 2 | Pending |
-| LAYT-03 | Phase 2 | Pending |
-| LAYT-04 | Phase 2 | Pending |
+| LAYT-01 | Phase 2 | Complete |
+| LAYT-02 | Phase 2 | Complete |
+| LAYT-03 | Phase 2 | Complete |
+| LAYT-04 | Phase 2 | Complete |
 | DATA-01 | Phase 3 | Pending |
 | DATA-02 | Phase 3 | Pending |
 | DATA-03 | Phase 3 | Pending |
