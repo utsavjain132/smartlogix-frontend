@@ -9,7 +9,7 @@ Requirements for the initial UI/UX revamp release.
 
 ### Infrastructure & Theming
 
-- [ ] **INFR-01**: Remove all legacy custom CSS files (except absolute globals).
+- [x] **INFR-01**: Remove all legacy custom CSS files (except absolute globals).
 - [x] **INFR-02**: Install and configure Tailwind CSS v4.
 - [ ] **INFR-03**: Install and configure `shadcn/ui` base and utility functions.
 - [ ] **INFR-04**: Define a modern, high-trust color palette (deep blues/slate, high contrast) in Tailwind config.
@@ -59,7 +59,7 @@ Deferred to future releases.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INFR-01 | Phase 1 | Pending |
+| INFR-01 | Phase 1 | Complete |
 | INFR-02 | Phase 1 | Complete |
 | INFR-03 | Phase 1 | Pending |
 | INFR-04 | Phase 1 | Pending |
