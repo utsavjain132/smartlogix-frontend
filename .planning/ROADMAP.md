@@ -32,7 +32,14 @@ A structured delivery plan for modernizing the FreightMatch platform UI to an en
   2. Business and Admin users can navigate via a persistent sticky sidebar on desktop.
   3. Truckers can navigate the app using a mobile-optimized menu.
   4. Layouts respond fluidly when resizing from mobile to desktop screens.
-**Plans**: TBD
+**Plans**: 5 plans
+
+Plans:
+- [ ] 02-01-PLAN.md — Wave 0: Create all test stubs (DashboardShell, TruckerShell, Navbar, Home, SignupPage)
+- [ ] 02-02-PLAN.md — DashboardShell + App.jsx root fix + Navbar conditional hide (LAYT-01)
+- [ ] 02-03-PLAN.md — Install shadcn Sheet + TruckerShell + App.jsx trucker route wiring (LAYT-02)
+- [ ] 02-04-PLAN.md — Home.jsx token redesign: replace all teal hardcodes with design tokens (LAYT-03)
+- [ ] 02-05-PLAN.md — Auth pages refinement: bg-background + brand mark on Login and Signup (LAYT-04)
 
 ### Phase 3: Core Data Views & Interactions
 **Goal**: Users can efficiently manage and interact with freight load data through context-preserving interfaces and role-optimized views.
@@ -62,6 +69,6 @@ A structured delivery plan for modernizing the FreightMatch platform UI to an en
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Infrastructure & Theming | 5/6 | Complete    | 2026-03-06 |
-| 2. App Shells & Layouts | 0/TBD | Not started | - |
+| 2. App Shells & Layouts | 0/5 | Not started | - |
 | 3. Core Data Views & Interactions | 0/TBD | Not started | - |
 | 4. Map Integration | 0/TBD | Not started | - |
