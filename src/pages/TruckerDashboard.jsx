@@ -105,7 +105,7 @@ const TruckerDashboard = () => {
   if (error) return <div className="p-8 text-center text-red-500">Error: {error}</div>;
 
   return (
-    <div className="min-h-screen bg-slate-50 p-6 md:p-8 font-sans text-slate-900">
+    <div>
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <h1 className="text-3xl font-bold tracking-tight text-slate-900">Trucker Dashboard</h1>
         <div className="flex gap-4">

@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
 import DashboardShell from './components/DashboardShell';
+import TruckerShell from './components/TruckerShell';
 import Home from './pages/Home';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
@@ -39,7 +40,9 @@ function App() {
             path="/trucker-dashboard" 
             element={
               <ProtectedRoute allowedRole="TRUCKER">
-                <TruckerDashboard />
+                <TruckerShell>
+                  <TruckerDashboard />
+                </TruckerShell>
               </ProtectedRoute>
             } 
           />
