@@ -11,48 +11,49 @@ import BusinessDashboard from './pages/BusinessDashboard';
 import TruckerDashboard from './pages/TruckerDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import ContactPage from './pages/ContactPage';
-import './App.css';
 
 function App() {
   return (
-    <Router>
-      <Navbar />
-      <ToastContainer position="top-right" autoClose={3000} />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        
-        <Route 
-          path="/business-dashboard" 
-          element={
-            <ProtectedRoute allowedRole="BUSINESS">
-              <BusinessDashboard />
-            </ProtectedRoute>
-          } 
-        />
-        
-        <Route 
-          path="/trucker-dashboard" 
-          element={
-            <ProtectedRoute allowedRole="TRUCKER">
-              <TruckerDashboard />
-            </ProtectedRoute>
-          } 
-        />
+    <div className="text-center min-h-screen bg-[#f4f7f6] font-sans antialiased animate-in fade-in slide-in-from-bottom-2 duration-500">
+      <Router>
+        <Navbar />
+        <ToastContainer position="top-right" autoClose={3000} />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          
+          <Route 
+            path="/business-dashboard" 
+            element={
+              <ProtectedRoute allowedRole="BUSINESS">
+                <BusinessDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          
+          <Route 
+            path="/trucker-dashboard" 
+            element={
+              <ProtectedRoute allowedRole="TRUCKER">
+                <TruckerDashboard />
+              </ProtectedRoute>
+            } 
+          />
 
-        <Route 
-          path="/admin-dashboard" 
-          element={
-            <ProtectedRoute allowedRole="ADMIN">
-              <AdminDashboard />
-            </ProtectedRoute>
-          } 
-        />
-        
-        <Route path="/contact-us" element={<ContactPage />} />
-      </Routes>
-    </Router>
+          <Route 
+            path="/admin-dashboard" 
+            element={
+              <ProtectedRoute allowedRole="ADMIN">
+                <AdminDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          
+          <Route path="/contact-us" element={<ContactPage />} />
+        </Routes>
+      </Router>
+    </div>
   );
 }
 
