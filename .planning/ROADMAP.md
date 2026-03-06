@@ -69,6 +69,6 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Infrastructure & Theming | 5/6 | Complete    | 2026-03-06 |
-| 2. App Shells & Layouts | 0/5 | Not started | - |
+| 2. App Shells & Layouts | 2/5 | In Progress|  |
 | 3. Core Data Views & Interactions | 0/TBD | Not started | - |
 | 4. Map Integration | 0/TBD | Not started | - |
